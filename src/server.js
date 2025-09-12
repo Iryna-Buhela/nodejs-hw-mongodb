@@ -1,15 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
-import dotenv from 'dotenv';
+import {
+  getContactsController,
+  getContactByIdController,
+} from './controllers/contacts.js';
 
-// import { getEnvVar } from './utils/getEnvVar.js';
-
-// const PORT = Number(getEnvVar('PORT', '3000'));
-
-dotenv.config();
-
-const PORT = 8080;
+const PORT = process.env.PORT || 3000;
 
 export async function setupServer() {
   const app = express();
@@ -25,9 +22,10 @@ export async function setupServer() {
     }),
   );
 
-  app.get('/', (req, res) => res.json({ message: '' }));
+  app.get('/contacts', getContactsController);
+  app.get('/contacts/:contactId', getContactByIdController);
 
-  app.use('*', (req, res, next) => {
+  app.use(/.*/, (req, res) => {
     res.status(404).json({ message: 'Not found' });
   });
 
