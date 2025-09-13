@@ -22,6 +22,8 @@ export async function setupServer() {
     }),
   );
 
+  app.set('json spaces', 2);
+
   app.get('/contacts', getContactsController);
   app.get('/contacts/:contactId', getContactByIdController);
 
