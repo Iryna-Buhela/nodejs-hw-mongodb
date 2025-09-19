@@ -1,5 +1,4 @@
 import { Contact } from '../models/contact.js';
-/**/ import { contactSchema } from '../models/contact.js';
 
 export async function getAllContacts() {
   return Contact.find();
@@ -10,33 +9,24 @@ export async function getContactById(contactId) {
 }
 
 export async function createContact(payload) {
-  /**/ const contact = await contactSchema.create(payload);
-  return contact;
+  return Contact.create(payload);
 }
 
 export async function deleteContact(contactId) {
-  const contact = await contactSchema.findOneAndDelete({
-    _id: contactId,
-  });
-
-  return contact;
+  return Contact.findOneAndDelete({ _id: contactId });
 }
 
-export async function updateContact(contactId, payload, options = {}) {
-  const rawResult = await contactSchema.findOneAndUpdate(
-    { _id: contactId },
-    payload,
-    {
-      new: true,
-      includeResultMetadata: true,
-      ...options,
-    },
-  );
+export async function updateContact(contactId, payload) {
+  const result = await Contact.findOneAndUpdate({ _id: contactId }, payload, {
+    new: true,
+    upsert: true,
+    includeResultMetadata: true,
+  });
 
-  if (!rawResult || !rawResult.value) return null;
+  if (!result || !result.value) return null;
 
   return {
-    student: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
+    value: result.value,
+    updatedExisting: result.lastErrorObject.updatedExisting,
   };
 }
