@@ -12,7 +12,7 @@ const router = Router();
 
 router.get('/', ctrlWrapper(getContactsController));
 
-router.get('/:contactsID', ctrlWrapper(getContactByIdController));
+router.get('/:contactId', ctrlWrapper(getContactByIdController));
 
 router.post('/', ctrlWrapper(createContactController));
 
