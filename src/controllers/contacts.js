@@ -7,17 +7,13 @@ import {
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
 
-export async function getContactsController(req, res, next) {
-  try {
-    const contacts = await getAllContacts();
-    res.json({
-      status: 200,
-      message: 'Successfully found contacts!',
-      data: contacts,
-    });
-  } catch (error) {
-    next(error);
-  }
+export async function getContactsController(req, res) {
+  const contacts = await getAllContacts();
+  res.json({
+    status: 200,
+    message: 'Successfully found contacts!',
+    data: contacts,
+  });
 }
 
 export async function getContactByIdController(req, res) {
@@ -60,18 +56,16 @@ export async function deleteContactController(req, res, next) {
 
 export async function patchContactController(req, res, next) {
   const { contactId } = req.params;
-  const result = await updateContact(contactId, req.body);
+  const contact = await updateContact(contactId, req.body);
 
-  if (!result) {
+  if (!contact) {
     next(createHttpError(404, 'Contact not found'));
     return;
   }
 
-  const status = result.isNew ? 201 : 200;
-
   res.json({
-    status,
+    status: 200,
     message: `Successfully patched a contact!`,
-    data: result.contact,
+    data: contact,
   });
 }
