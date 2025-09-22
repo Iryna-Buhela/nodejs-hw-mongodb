@@ -17,16 +17,7 @@ export async function deleteContact(contactId) {
 }
 
 export async function updateContact(contactId, payload) {
-  const result = await Contact.findOneAndUpdate({ _id: contactId }, payload, {
+  return Contact.findOneAndUpdate({ _id: contactId }, payload, {
     new: true,
-    upsert: true,
-    includeResultMetadata: true,
   });
-
-  if (!result || !result.value) return null;
-
-  return {
-    value: result.value,
-    updatedExisting: result.lastErrorObject.updatedExisting,
-  };
 }
