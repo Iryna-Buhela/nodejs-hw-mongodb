@@ -14,7 +14,7 @@ export async function getAllContacts({
   const contactsQuery = Contact.find(filter);
 
   const [contactsCount, contacts] = await Promise.all([
-    Contact.countDocuments(filter),
+    Contact.countDocuments(contactsQuery.getFilter()),
     contactsQuery
       .skip(skip)
       .limit(perPage)
