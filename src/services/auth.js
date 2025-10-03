@@ -17,12 +17,12 @@ export async function registerUser(payload) {
   });
 }
 
-export async function loginUser(payload) {
-  const user = await UserCollection.findOne({ email: payload.email });
+export async function loginUser(email, password) {
+  const user = await UserCollection.findOne({ email });
   if (!user) {
     throw createHttpError(401, 'Email or password is incorrect');
   }
-  const isEqual = await bcrypt.compare(payload.password, user.password);
+  const isEqual = await bcrypt.compare(password, user.password);
 
   if (!isEqual) {
     throw createHttpError(401, 'Email or password is incorrect');
