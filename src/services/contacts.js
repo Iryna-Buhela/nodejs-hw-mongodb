@@ -1,4 +1,4 @@
-import { Contact } from '../models/contact.js';
+import { Contact } from '../db/models/contact.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
 
@@ -8,10 +8,11 @@ export async function getAllContacts({
   sortOrder = SORT_ORDER.ASC,
   sortBy = '_id',
   filter = {},
+  userId,
 }) {
   const skip = page > 0 ? (page - 1) * perPage : 0;
 
-  const contactsQuery = Contact.find(filter);
+  const contactsQuery = Contact.find({ userId, ...filter });
 
   const [contactsCount, contacts] = await Promise.all([
     Contact.countDocuments(contactsQuery.getFilter()),
@@ -30,20 +31,21 @@ export async function getAllContacts({
   };
 }
 
-export async function getContactById(contactId) {
-  return Contact.findById(contactId);
+export async function getContactById(contactId, userId) {
+  return Contact.findOne({ _id: contactId, userId });
 }
 
 export async function createContact(payload) {
   return Contact.create(payload);
 }
 
-export async function deleteContact(contactId) {
-  return Contact.findOneAndDelete({ _id: contactId });
+export async function deleteContact(contactId, userId) {
+  return Contact.findOneAndDelete({ _id: contactId, userId });
 }
 
-export async function updateContact(contactId, payload) {
-  return Contact.findOneAndUpdate({ _id: contactId }, payload, {
+export async function updateContact(contactId, payload, userId, options = {}) {
+  return Contact.findOneAndUpdate({ _id: contactId, userId }, payload, {
     new: true,
+    ...options,
   });
 }
