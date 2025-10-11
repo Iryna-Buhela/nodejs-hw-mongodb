@@ -8,7 +8,7 @@ import createHttpError from 'http-errors';
 import {
   FIFTEEN_MINUTES,
   SMTP,
-  TEMPLATES_DIR,
+  TEMP_DIR,
   THIRTY_DAYS,
 } from '../constants/index.js';
 import { UserCollection } from '../db/models/user.js';
@@ -106,7 +106,7 @@ export async function requestResetToken(email) {
   );
 
   const resetPasswordTemplatePath = path.join(
-    TEMPLATES_DIR,
+    TEMP_DIR,
     'reset-password-email.html',
   );
 
