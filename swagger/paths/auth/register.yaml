@@ -1,0 +1,56 @@
+tags:
+  - Auth
+summary: Register a new user
+operationId: registerUser
+description: 'Register a new user with name, email, and password'
+security: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - email
+          - password
+        properties:
+          name:
+            type: string
+            example: 'Sarah Michelle Gellar'
+          email:
+            type: string
+            example: 'sarah@gmail.com'
+          password:
+            type: string
+            example: 'qwerty12345'
+responses:
+  '201':
+    description: User successfully registered
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully registered a new user!
+            data:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  example: 65e4decdd286b30065d54af9
+                name:
+                  type: string
+                  example: 'Sarah Michelle Gellar'
+                email:
+                  type: string
+                  example: 'sarah@gmail.com'
+  '400':
+    description: Invalid registration data
+  '409':
+    description: User already exists

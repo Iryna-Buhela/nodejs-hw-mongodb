@@ -1,0 +1,48 @@
+tags:
+  - Auth
+summary: Login with Google OAuth
+operationId: loginWithGoogle
+description: 'Login or register user via Google OAuth flow'
+security: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - code
+        properties:
+          code:
+            type: string
+            example: '4/0AdDMEyExampleOAuthCode'
+responses:
+  '200':
+    description: Successfully authenticated with Google
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully logged in with Google
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                refreshToken:
+                  type: string
+                user:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    email:
+                      type: string
+  '400':
+    description: Invalid or expired Google OAuth code

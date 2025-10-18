@@ -3,7 +3,7 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import crypto from 'node:crypto';
+import crypto, { randomBytes } from 'node:crypto';
 import createHttpError from 'http-errors';
 import {
   FIFTEEN_MINUTES,
@@ -15,6 +15,10 @@ import { UserCollection } from '../db/models/user.js';
 import { SessionsCollection } from '../db/models/session.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { sendEmail } from '../utils/sendMail.js';
+import {
+  getFullNameFromGoogleTokenPayload,
+  validateCode,
+} from '../utils/googleOAuth2.js';
 
 export async function registerUser(payload) {
   const user = await UserCollection.findOne({ email: payload.email });
@@ -160,4 +164,27 @@ export async function resetPassword(payload) {
   );
 
   await SessionsCollection.deleteOne({ userId: user._id });
+}
+
+export async function loginOrSignupWithGoogle(code) {
+  const loginTicket = await validateCode(code);
+  const payload = loginTicket.getPayload();
+  if (!payload) throw createHttpError(401, 'Invalid Google token');
+
+  let user = await UserCollection.findOne({ email: payload.email });
+  if (!user) {
+    const password = await bcrypt.hash(randomBytes(10), 10);
+    user = await UserCollection.create({
+      email: payload.email,
+      name: getFullNameFromGoogleTokenPayload(payload),
+      password: password,
+    });
+  }
+
+  const newSession = createSession();
+
+  return await SessionsCollection.create({
+    userId: user._id,
+    ...newSession,
+  });
 }
