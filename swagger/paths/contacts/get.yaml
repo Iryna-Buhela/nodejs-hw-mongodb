@@ -10,7 +10,7 @@ parameters:
     name: page
     schema:
       type: integer
-    example: 1
+      example: 1
   - in: query
     name: perPage
     schema:
@@ -29,14 +29,21 @@ parameters:
       enum: ['asc', 'desc']
       example: 'asc'
   - in: query
-    name: contact type
+    name: type
     schema:
       type: string
       enum: ['work', 'home', 'personal']
       example: 'personal'
+    description: 'Filter contacts by type'
+  - in: query
+    name: isFavourite
+    schema:
+      type: boolean
+      example: true
+    description: 'Filter contacts by favourite status'
 responses:
   '200':
-    description: Successfully found students!
+    description: Successfully found contacts!
     content:
       application/json:
         schema:
