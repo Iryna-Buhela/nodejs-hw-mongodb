@@ -174,13 +174,14 @@
         ],
         "summary": "Create contact",
         "operationId": "createContact",
-        "description": "Create a contact with payload",
+        "description": "Create a new contact",
         "security": [
           {
             "bearerAuth": []
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -188,11 +189,7 @@
                 "required": [
                   "name",
                   "phoneNumber",
-                  "email",
-                  "isFavourite",
-                  "contactType",
-                  "photo",
-                  "userId"
+                  "contactType"
                 ],
                 "properties": {
                   "name": {
@@ -207,15 +204,16 @@
                   },
                   "email": {
                     "description": "Contact's email",
-                    "type": "string"
+                    "type": "string",
+                    "example": "john.doe@example.com"
                   },
                   "isFavourite": {
-                    "description": "Contact status",
+                    "description": "Contact status (default: false)",
                     "type": "boolean",
                     "example": false
                   },
                   "contactType": {
-                    "description": "Contact type",
+                    "description": "Contact type (default: personal)",
                     "type": "string",
                     "enum": [
                       "work",
@@ -224,13 +222,8 @@
                     ],
                     "example": "personal"
                   },
-                  "userId": {
-                    "description": "Contact's owner id",
-                    "type": "string",
-                    "example": "65e4decdd286b30065d54af9"
-                  },
                   "photo": {
-                    "description": "Contact's photo",
+                    "description": "Contact's photo (optional)",
                     "type": "string",
                     "format": "binary"
                   }
@@ -241,7 +234,7 @@
         },
         "responses": {
           "201": {
-            "description": "Creates a student",
+            "description": "Successfully created a contact",
             "content": {
               "application/json": {
                 "schema": {
@@ -258,16 +251,18 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully created a student!"
+                      "example": "Successfully created a contact!"
                     },
                     "data": {
-                      "type": "object",
                       "$ref": "#/components/schemas/contact"
                     }
                   }
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid request body"
           },
           "401": {
             "$ref": "#/components/responses/401"
