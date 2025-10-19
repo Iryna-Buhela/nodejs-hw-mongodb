@@ -489,8 +489,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Successfully deleted contact!",
+          "204": {
+            "description": "Successfully deleted contact! No content is returned.",
             "content": {
               "application/json": {
                 "schema": {
@@ -502,7 +502,7 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 200
+                      "example": 204
                     },
                     "message": {
                       "type": "string",
